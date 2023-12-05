@@ -1,0 +1,104 @@
+name: open_weather_app
+description: "An open weather app based on providing weather of different places
+  provided by the https://home.openweathermap.org uses bloc as state management
+  and this app is develop by Jagmeet Singh."
+
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+
+#style and native icons for Ios devices, as well as for the android devices
+  cupertino_icons: ^1.0.2
+
+# State management with BLoC pattern.
+  flutter_bloc: ^8.1.3
+  bloc: ^8.1.2
+
+#Persistent state management simplified
+  hydrated_bloc: ^9.1.2
+
+# Accessing app directories made easy
+  path_provider: ^2.1.1
+
+# Load configuration from .env.
+  flutter_dotenv: ^5.1.0
+
+# Flexible navigation for Flutter.
+  go_router: ^12.1.1
+
+# HTTP client for Dart.
+  http: ^1.1.2
+
+# Convert string cases.
+  recase: ^4.1.0  
+
+# Simplify equality comparisons.
+  equatable: ^2.0.5 
+
+  
+  flutter:
+    sdk: flutter
+
+#for the text style    
+  google_fonts: ^6.1.0
+
+#for launching app icon
+  icons_launcher: ^2.1.5 
+
+#for lottie animation 
+  lottie: ^2.7.0
+  
+  
+  
+    
+    
+    
+
+
+dev_dependencies:
+
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - .env
+    - assets/
+    - assets/images/
+    - assets/lottie/
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
