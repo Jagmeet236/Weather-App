@@ -54,25 +54,29 @@ class MyApp extends StatelessWidget {
             create: (context) => TempSettingsCubit(),
           ),
           BlocProvider<ThemeCubit>(
-            create: (context) => ThemeCubit(
-              weatherCubit: context.read<WeatherCubit>(),
-            ),
+            create: (context) => ThemeCubit(),
           ),
         ],
-        child: BlocBuilder<ThemeCubit, ThemeState>(
-          builder: (context, state) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              title: appName,
-              theme: state.appTheme == AppTheme.light
-                  ? ThemeData.light()
-                  : ThemeData.dark(),
-              routerDelegate: appRouter.goRouter.routerDelegate,
-              routeInformationParser: appRouter.goRouter.routeInformationParser,
-              routeInformationProvider:
-                  appRouter.goRouter.routeInformationProvider,
-            );
+        child: BlocListener<WeatherCubit, WeatherState>(
+          listener: (context, state) {
+            context.read<ThemeCubit>().setTheme(state.weather.temp);
           },
+          child: BlocBuilder<ThemeCubit, ThemeState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                title: appName,
+                theme: state.appTheme == AppTheme.light
+                    ? ThemeData.light()
+                    : ThemeData.dark(),
+                routerDelegate: appRouter.goRouter.routerDelegate,
+                routeInformationParser:
+                    appRouter.goRouter.routeInformationParser,
+                routeInformationProvider:
+                    appRouter.goRouter.routeInformationProvider,
+              );
+            },
+          ),
         ),
       ),
     );
