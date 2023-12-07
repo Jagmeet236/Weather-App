@@ -1,26 +1,26 @@
-part of 'temp_settings_cubit.dart';
+part of 'temp_setting_bloc.dart';
 
 enum TempUnit {
   celsius,
   fahrenheit,
 }
 
-class TempSettingsState extends Equatable {
+class TempSettingState extends Equatable {
   final TempUnit tempUnit;
 
-  TempSettingsState({this.tempUnit = TempUnit.celsius});
+  TempSettingState({this.tempUnit = TempUnit.celsius});
 
-  factory TempSettingsState.initial() {
-    return TempSettingsState();
+  factory TempSettingState.initial() {
+    return TempSettingState();
   }
 
   @override
   List<Object> get props => [tempUnit];
 
-  TempSettingsState copyWith({
+  TempSettingState copyWith({
     TempUnit? tempUnit,
   }) {
-    return TempSettingsState(
+    return TempSettingState(
       tempUnit: tempUnit ?? this.tempUnit,
     );
   }
