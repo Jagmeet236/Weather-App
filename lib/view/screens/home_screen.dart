@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_weather_app/bloc/bloc.dart';
 import 'package:open_weather_app/constants/style.dart';
 import 'package:open_weather_app/constants/weather_services.dart';
@@ -63,11 +64,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget showIcon(String icon) {
     return FadeInImage.assetNetwork(
-      placeholder: 'assets/images/loading.gif',
-      image: 'http://$kIconHost/img/wn/$icon@4x.png',
-      width: 96,
-      height: 96,
-    );
+        placeholder: 'assets/images/loading.gif',
+        image: 'http://$kIconHost/img/wn/$icon@4x.png',
+        width: 96,
+        height: 96,
+        imageErrorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error');
+          return Lottie.asset('assets/lottie/loadingAnimation.json',
+              width: 96, height: 96);
+        });
   }
 
   Widget formatText(String description) {

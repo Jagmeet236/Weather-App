@@ -11,11 +11,7 @@ import 'package:http/http.dart' as http;
 Future<void> main() async {
   await dotenv.load(fileName: '.env');
   WidgetsFlutterBinding.ensureInitialized();
-  // HydratedBloc.storage = await HydratedStorage.build(
-  //   storageDirectory: kIsWeb
-  //       ? HydratedStorage.webStorageDirectory
-  //       : await getApplicationDocumentsDirectory(),
-  // );
+
   runApp(MyApp(
     appRouter: AppRouter(),
   ));
@@ -48,25 +44,29 @@ class MyApp extends StatelessWidget {
             create: (context) => TempSettingBloc(),
           ),
           BlocProvider<ThemeBloc>(
-            create: (context) => ThemeBloc(
-              weatherBloc: context.read<WeatherBloc>(),
-            ),
+            create: (context) => ThemeBloc(),
           ),
         ],
-        child: BlocBuilder<ThemeBloc, ThemeState>(
-          builder: (context, state) {
-            return MaterialApp.router(
-              debugShowCheckedModeBanner: false,
-              title: appName,
-              theme: state.appTheme == AppTheme.light
-                  ? ThemeData.light()
-                  : ThemeData.dark(),
-              routerDelegate: appRouter.goRouter.routerDelegate,
-              routeInformationParser: appRouter.goRouter.routeInformationParser,
-              routeInformationProvider:
-                  appRouter.goRouter.routeInformationProvider,
-            );
+        child: BlocListener<WeatherBloc, WeatherState>(
+          listener: (context, state) {
+            context.read<ThemeBloc>().setTheme(state.weather.temp);
           },
+          child: BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, state) {
+              return MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                title: appName,
+                theme: state.appTheme == AppTheme.light
+                    ? ThemeData.light()
+                    : ThemeData.dark(),
+                routerDelegate: appRouter.goRouter.routerDelegate,
+                routeInformationParser:
+                    appRouter.goRouter.routeInformationParser,
+                routeInformationProvider:
+                    appRouter.goRouter.routeInformationProvider,
+              );
+            },
+          ),
         ),
       ),
     );
