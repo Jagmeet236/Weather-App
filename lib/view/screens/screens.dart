@@ -3,3 +3,4 @@ export 'search_screen.dart';
 export 'settings_screen.dart';
 export 'error_screen.dart';
 export 'splash_screen.dart';
+export 'favoriteweather_screen.dart';

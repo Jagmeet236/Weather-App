@@ -22,36 +22,52 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(appName),
-          actions: [
-            IconButton(
-              onPressed: () async {
-                _city = await context.push('/home/search');
+      appBar: AppBar(
+        title: const Text(appName),
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.go('/home/favorite');
+            },
+            icon: Icon(Icons.favorite_border_outlined),
+          ),
+          IconButton(
+            onPressed: () async {
+              _city = await context.push('/home/search');
+              print('$_city');
+              if (_city != null) {
+                context.read<WeatherBloc>().add(FetchWeatherEvent(
+                    city:
+                        _city!)); // Adds a FetchWeatherEvent to the WeatherBloc
                 print('$_city');
-                if (_city != null) {
-                  context
-                      .read<WeatherBloc>()
-                      .add(FetchWeatherEvent(city: _city!));
-                  print('$_city');
-                }
-              },
-              icon: Icon(Icons.search),
+              }
+            },
+            icon: Icon(Icons.search),
+          ),
+          IconButton(
+            onPressed: () {
+              context.goNamed('settings');
+            },
+            icon: const Padding(
+              padding: EdgeInsets.only(right: 10.0),
+              child: Icon(Icons.settings),
             ),
-            IconButton(
-              onPressed: () {
-                context.goNamed('settings');
-              },
-              icon: const Padding(
-                padding: EdgeInsets.only(right: 10.0),
-                child: Icon(Icons.settings),
-              ),
-            ),
-          ],
-        ),
-        body: _showWeather());
+          ),
+        ],
+      ),
+      body: _showWeather(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_city != null) {
+            context.read<FavoriteWeatherCubit>().addFavorite(_city!);
+          }
+        },
+        child: const Icon(Icons.favorite),
+      ),
+    );
   }
 
+  // Formats the temperature based on the user's temperature unit preference.
   String showTemperature(double temperature) {
     final tempUnit = context.watch<TempSettingBloc>().state.tempUnit;
 
@@ -62,6 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return temperature.toStringAsFixed(2) + '℃';
   }
 
+  // Fetches the weather icon image from the internet.
   Widget showIcon(String icon) {
     return FadeInImage.assetNetwork(
         placeholder: 'assets/images/loading.gif',
@@ -75,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+// Formats the weather description for better readability.
   Widget formatText(String description) {
     final formattedString = description;
     return Text(
@@ -116,76 +134,83 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        return ListView(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 6,
-            ),
-            Text(
-              state.weather.name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold,
+        return RefreshIndicator(
+          onRefresh: () async {
+            context
+                .read<WeatherBloc>()
+                .add(FetchWeatherEvent(city: state.weather.name)); //refresh
+          },
+          child: ListView(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height / 6,
               ),
-            ),
-            const SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  TimeOfDay.fromDateTime(state.weather.lastUpdated)
-                      .format(context),
-                  style: const TextStyle(fontSize: 18.0),
+              Text(
+                state.weather.name,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 10.0),
-                Text(
-                  '(${state.weather.country})',
-                  style: const TextStyle(fontSize: 18.0),
-                ),
-              ],
-            ),
-            const SizedBox(height: 60.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  showTemperature(state.weather.temp),
-                  style: const TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
+              ),
+              const SizedBox(height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    TimeOfDay.fromDateTime(state.weather.lastUpdated)
+                        .format(context),
+                    style: const TextStyle(fontSize: 18.0),
                   ),
-                ),
-                const SizedBox(width: 20.0),
-                Column(
-                  children: [
-                    Text(
-                      showTemperature(state.weather.tempMax),
-                      style: const TextStyle(fontSize: 16.0),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    '(${state.weather.country})',
+                    style: const TextStyle(fontSize: 18.0),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 60.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    showTemperature(state.weather.temp),
+                    style: const TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 10.0),
-                    Text(
-                      showTemperature(state.weather.tempMin),
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 40.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Spacer(),
-                showIcon(state.weather.icon),
-                Expanded(
-                  flex: 3,
-                  child: formatText(state.weather.description),
-                ),
-                Spacer(),
-              ],
-            ),
-          ],
+                  ),
+                  const SizedBox(width: 20.0),
+                  Column(
+                    children: [
+                      Text(
+                        showTemperature(state.weather.tempMax),
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(
+                        showTemperature(state.weather.tempMin),
+                        style: const TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Spacer(),
+                  showIcon(state.weather.icon),
+                  Expanded(
+                    flex: 3,
+                    child: formatText(state.weather.description),
+                  ),
+                  Spacer(),
+                ],
+              ),
+            ],
+          ),
         );
       },
     );

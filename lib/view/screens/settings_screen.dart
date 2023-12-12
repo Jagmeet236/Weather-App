@@ -8,22 +8,27 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Settings"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: ListTile(
-            title: Text('Temperature Unit'),
-            subtitle: Text('Celsius/Fahrenheit (Default: Celsius)'),
-            trailing: Switch(
-              value: context.watch<TempSettingBloc>().state.tempUnit ==
-                  TempUnit.celsius,
-              onChanged: (_) {
-                context.read<TempSettingBloc>().add(ToggleTempUnitEvent());
-              },
-            ),
+      appBar: AppBar(
+        // Title of the settings screen
+        title: const Text("Settings"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: ListTile(
+          // List Tile for temperature unit setting
+          title: Text('Temperature Unit'),
+          subtitle: Text('Celsius/Fahrenheit (Default: Celsius)'),
+          trailing: Switch(
+            // Switch to toggle between Celsius and Fahrenheit
+            value: context.watch<TempSettingBloc>().state.tempUnit ==
+                TempUnit.celsius,
+            onChanged: (_) {
+              // Trigger an event to toggle the temperature unit
+              context.read<TempSettingBloc>().add(ToggleTempUnitEvent());
+            },
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

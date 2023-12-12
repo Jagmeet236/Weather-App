@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import 'package:open_weather_app/constants/style.dart';
 import 'package:open_weather_app/repository/weather_repository.dart';
 import 'package:open_weather_app/bloc/bloc.dart';
@@ -45,6 +46,10 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider<ThemeBloc>(
             create: (context) => ThemeBloc(),
+          ),
+          BlocProvider<FavoriteWeatherCubit>(
+            create: (context) => FavoriteWeatherCubit(
+                weatherRepository: context.read<WeatherRepository>()),
           ),
         ],
         child: BlocListener<WeatherBloc, WeatherState>(

@@ -38,6 +38,15 @@ class AppRouter {
                 );
               },
             ),
+            GoRoute(
+              name: 'favoriteScreen',
+              path: 'favorite',
+              pageBuilder: (context, s) {
+                return const MaterialPage(
+                  child: FavoriteWeatherScreen(),
+                );
+              },
+            ),
           ],
         ),
       ],
